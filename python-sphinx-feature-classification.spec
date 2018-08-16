@@ -11,8 +11,8 @@
 %global module sphinx_feature_classification
 
 Name:       python-%{library}
-Version:    XXX
-Release:    XXX
+Version:    0.3.0
+Release:    1%{?dist}
 Summary:    OpenStack sphinx-feature-classification library
 License:    ASL 2.0
 URL:        https://docs.openstack.org/sphinx-feature-classification/latest/
@@ -165,3 +165,6 @@ rm -rf .testrepository
 %endif # with_python3
 
 %changelog
+* Thu Aug 16 2018 RDO <dev@lists.rdoproject.org> 0.3.0-1
+- Update to 0.3.0
+
