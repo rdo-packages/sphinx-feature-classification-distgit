@@ -1,11 +1,15 @@
-%{!?upstream_version: %global upstream_version %{version}%{?milestone}}
-
-# Python3 support in OpenStack starts with version 3.5,
-# which is only in Fedora 24+
-%if 0%{?fedora}
-%global with_python3 1
+# Macros for py2/py3 compatibility
+%if 0%{?fedora} || 0%{?rhel} > 7
+%global pyver %{python3_pkgversion}
+%else
+%global pyver 2
 %endif
-
+%global pyver_bin python%{pyver}
+%global pyver_sitelib %python%{pyver}_sitelib
+%global pyver_install %py%{pyver}_install
+%global pyver_build %py%{pyver}_build
+# End of macros for py2/py3 compatibility
+%{!?upstream_version: %global upstream_version %{version}%{?milestone}}
 
 %global library sphinx-feature-classification
 %global module sphinx_feature_classification
@@ -21,37 +25,43 @@ Source0:    http://tarballs.openstack.org/%{library}/%{library}-%{upstream_versi
 
 BuildArch:  noarch
 
-%package -n python2-%{library}
+%package -n python%{pyver}-%{library}
 Summary:    OpenStack sphinx-feature-classification library
-%{?python_provide:%python_provide python2-%{library}}
+%{?python_provide:%python_provide python%{pyver}-%{library}}
 
 BuildRequires:  git
 BuildRequires:  openstack-macros
-BuildRequires:  python2-devel
-BuildRequires:  python-pbr
-BuildRequires:  python2-oslotest
-BuildRequires:  python2-ddt
-BuildRequires:  python2-testtools
-BuildRequires:  python2-testrepository
+BuildRequires:  python%{pyver}-devel
+BuildRequires:  python%{pyver}-pbr
+BuildRequires:  python%{pyver}-oslotest
+BuildRequires:  python%{pyver}-ddt
+BuildRequires:  python%{pyver}-testtools
+BuildRequires:  python%{pyver}-testrepository
 
+Requires:  python%{pyver}-pbr
+
+# Handle python2 exception
+%if %{pyver} == 2
 Requires:  python-docutils
-Requires:  python-pbr
+%else
+Requires:  python%{pyver}-docutils
+%endif
 
-%description -n python2-%{library}
+%description -n python%{pyver}-%{library}
 OpenStack sphinx-feature-classification library.
 
 This is a Sphinx directive that allows creating matrices of drivers a project contains and which features they support.
 
 
-%package -n python2-%{library}-tests
+%package -n python%{pyver}-%{library}-tests
 Summary:    OpenStack sphinx-feature-classification library tests
-Requires:   python2-oslotest
-Requires:   python2-ddt
-Requires:   python2-testtools
-Requires:   python2-testrepository
-Requires:   python2-%{library} = %{version}-%{release}
+Requires:   python%{pyver}-oslotest
+Requires:   python%{pyver}-ddt
+Requires:   python%{pyver}-testtools
+Requires:   python%{pyver}-testrepository
+Requires:   python%{pyver}-%{library} = %{version}-%{release}
 
-%description -n python2-%{library}-tests
+%description -n python%{pyver}-%{library}-tests
 OpenStack sphinx-feature-classification library.
 
 This package contains the example library test files.
@@ -60,48 +70,13 @@ This package contains the example library test files.
 %package -n python-%{library}-doc
 Summary:    OpenStack sphinx-feature-classification library documentation
 
-BuildRequires: python2-sphinx
-BuildRequires: python2-openstackdocstheme
+BuildRequires: python%{pyver}-sphinx
+BuildRequires: python%{pyver}-openstackdocstheme
 
 %description -n python-%{library}-doc
 OpenStack sphinx-feature-classification library.
 
 This package contains the documentation.
-
-%if 0%{?with_python3}
-%package -n python3-%{library}
-Summary:    OpenStack sphinx-feature-classification library
-%{?python_provide:%python_provide python3-%{library}}
-
-BuildRequires:  python3-devel
-BuildRequires:  python3-pbr
-BuildRequires:  python3-oslotest
-BuildRequires:  python3-ddt
-BuildRequires:  python3-testtools
-BuildRequires:  python3-testrepository
-
-%description -n python3-%{library}
-OpenStack sphinx-feature-classification library.
-
-This is a Sphinx directive that allows creating matrices of drivers a project contains and which features they support.
-
-
-%package -n python3-%{library}-tests
-Summary:    OpenStack sphinx-feature-classification library tests
-
-Requires:   python3-oslotest
-Requires:   python3-ddt
-Requires:   python3-testtools
-Requires:   python3-testrepository
-Requires:   python3-%{library} = %{version}-%{release}
-
-%description -n python3-%{library}-tests
-OpenStack sphinx-feature-classification library.
-
-This package contains the example library test files.
-
-%endif # with_python3
-
 
 %description
 OpenStack sphinx-feature-classification library.
@@ -114,54 +89,33 @@ OpenStack sphinx-feature-classification library.
 %py_req_cleanup
 
 %build
-%py2_build
-%if 0%{?with_python3}
-%py3_build
-%endif
+%{pyver_build}
 
 # generate html docs
 export PYTHONPATH=.
-sphinx-build -b html doc/source doc/build/html
-# remove the sphinx-build leftovers
+sphinx-build-%{pyver} -b html doc/source doc/build/html
+# remove the sphinx-build-%{pyver} leftovers
 rm -rf doc/build/html/.{doctrees,buildinfo}
 
 %install
-%py2_install
-%if 0%{?with_python3}
-%py3_install
-%endif
+%{pyver_install}
 
 %check
-%if 0%{?with_python3}
-%{__python3} setup.py test
-rm -rf .testrepository
-%endif
-%{__python2} setup.py test
+export PYTHON=%{pyver_bin}
+%{pyver_bin} setup.py test
 
-%files -n python2-%{library}
+%files -n python%{pyver}-%{library}
 %license LICENSE
-%{python2_sitelib}/%{module}
-%{python2_sitelib}/%{module}-*.egg-info
-%exclude %{python2_sitelib}/%{module}/tests
+%{pyver_sitelib}/%{module}
+%{pyver_sitelib}/%{module}-*.egg-info
+%exclude %{pyver_sitelib}/%{module}/tests
 
-%files -n python2-%{library}-tests
+%files -n python%{pyver}-%{library}-tests
 %license LICENSE
-%{python2_sitelib}/%{module}/tests
+%{pyver_sitelib}/%{module}/tests
 
 %files -n python-%{library}-doc
 %license LICENSE
 %doc doc/build/html README.rst
-
-%if 0%{?with_python3}
-%files -n python3-%{library}
-%license LICENSE
-%{python3_sitelib}/%{module}
-%{python3_sitelib}/%{module}-*.egg-info
-%exclude %{python3_sitelib}/%{module}/tests
-
-%files -n python3-%{library}-tests
-%license LICENSE
-%{python3_sitelib}/%{module}/tests
-%endif # with_python3
 
 %changelog
