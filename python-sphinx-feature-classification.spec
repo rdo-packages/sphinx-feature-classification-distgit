@@ -13,6 +13,7 @@
 
 %global library sphinx-feature-classification
 %global module sphinx_feature_classification
+%global with_doc 1
 
 Name:       python-%{library}
 Version:    XXX
@@ -67,6 +68,7 @@ OpenStack sphinx-feature-classification library.
 This package contains the example library test files.
 
 
+%if 0%{?with_doc}
 %package -n python-%{library}-doc
 Summary:    OpenStack sphinx-feature-classification library documentation
 
@@ -77,6 +79,7 @@ BuildRequires: python%{pyver}-openstackdocstheme
 OpenStack sphinx-feature-classification library.
 
 This package contains the documentation.
+%endif
 
 %description
 OpenStack sphinx-feature-classification library.
@@ -91,11 +94,13 @@ OpenStack sphinx-feature-classification library.
 %build
 %{pyver_build}
 
+%if 0%{?with_doc}
 # generate html docs
 export PYTHONPATH=.
 sphinx-build-%{pyver} -b html doc/source doc/build/html
 # remove the sphinx-build-%{pyver} leftovers
 rm -rf doc/build/html/.{doctrees,buildinfo}
+%endif
 
 %install
 %{pyver_install}
@@ -114,8 +119,10 @@ export PYTHON=%{pyver_bin}
 %license LICENSE
 %{pyver_sitelib}/%{module}/tests
 
+%if 0%{?with_doc}
 %files -n python-%{library}-doc
 %license LICENSE
 %doc doc/build/html README.rst
+%endif
 
 %changelog
