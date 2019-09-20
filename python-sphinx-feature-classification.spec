@@ -16,8 +16,8 @@
 %global with_doc 1
 
 Name:       python-%{library}
-Version:    XXX
-Release:    XXX
+Version:    0.4.1
+Release:    1%{?dist}
 Summary:    OpenStack sphinx-feature-classification library
 License:    ASL 2.0
 URL:        https://docs.openstack.org/sphinx-feature-classification/latest/
@@ -126,3 +126,6 @@ export PYTHON=%{pyver_bin}
 %endif
 
 %changelog
+* Fri Sep 20 2019 RDO <dev@lists.rdoproject.org> 0.4.1-1
+- Update to 0.4.1
+
