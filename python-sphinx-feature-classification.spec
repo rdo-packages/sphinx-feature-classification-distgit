@@ -1,14 +1,3 @@
-# Macros for py2/py3 compatibility
-%if 0%{?fedora} || 0%{?rhel} > 7
-%global pyver %{python3_pkgversion}
-%else
-%global pyver 2
-%endif
-%global pyver_bin python%{pyver}
-%global pyver_sitelib %python%{pyver}_sitelib
-%global pyver_install %py%{pyver}_install
-%global pyver_build %py%{pyver}_build
-# End of macros for py2/py3 compatibility
 %{!?upstream_version: %global upstream_version %{version}%{?milestone}}
 
 %global library sphinx-feature-classification
@@ -26,43 +15,38 @@ Source0:    http://tarballs.openstack.org/%{library}/%{library}-%{upstream_versi
 
 BuildArch:  noarch
 
-%package -n python%{pyver}-%{library}
+%package -n python3-%{library}
 Summary:    OpenStack sphinx-feature-classification library
-%{?python_provide:%python_provide python%{pyver}-%{library}}
+%{?python_provide:%python_provide python3-%{library}}
 
 BuildRequires:  git
 BuildRequires:  openstack-macros
-BuildRequires:  python%{pyver}-devel
-BuildRequires:  python%{pyver}-pbr
-BuildRequires:  python%{pyver}-oslotest
-BuildRequires:  python%{pyver}-ddt
-BuildRequires:  python%{pyver}-testtools
-BuildRequires:  python%{pyver}-testrepository
+BuildRequires:  python3-devel
+BuildRequires:  python3-pbr
+BuildRequires:  python3-oslotest
+BuildRequires:  python3-ddt
+BuildRequires:  python3-testtools
+BuildRequires:  python3-testrepository
 
-Requires:  python%{pyver}-pbr
+Requires:  python3-pbr
 
-# Handle python2 exception
-%if %{pyver} == 2
-Requires:  python-docutils
-%else
-Requires:  python%{pyver}-docutils
-%endif
+Requires:  python3-docutils
 
-%description -n python%{pyver}-%{library}
+%description -n python3-%{library}
 OpenStack sphinx-feature-classification library.
 
 This is a Sphinx directive that allows creating matrices of drivers a project contains and which features they support.
 
 
-%package -n python%{pyver}-%{library}-tests
+%package -n python3-%{library}-tests
 Summary:    OpenStack sphinx-feature-classification library tests
-Requires:   python%{pyver}-oslotest
-Requires:   python%{pyver}-ddt
-Requires:   python%{pyver}-testtools
-Requires:   python%{pyver}-testrepository
-Requires:   python%{pyver}-%{library} = %{version}-%{release}
+Requires:   python3-oslotest
+Requires:   python3-ddt
+Requires:   python3-testtools
+Requires:   python3-testrepository
+Requires:   python3-%{library} = %{version}-%{release}
 
-%description -n python%{pyver}-%{library}-tests
+%description -n python3-%{library}-tests
 OpenStack sphinx-feature-classification library.
 
 This package contains the example library test files.
@@ -72,8 +56,8 @@ This package contains the example library test files.
 %package -n python-%{library}-doc
 Summary:    OpenStack sphinx-feature-classification library documentation
 
-BuildRequires: python%{pyver}-sphinx
-BuildRequires: python%{pyver}-openstackdocstheme
+BuildRequires: python3-sphinx
+BuildRequires: python3-openstackdocstheme
 
 %description -n python-%{library}-doc
 OpenStack sphinx-feature-classification library.
@@ -92,32 +76,32 @@ OpenStack sphinx-feature-classification library.
 %py_req_cleanup
 
 %build
-%{pyver_build}
+%{py3_build}
 
 %if 0%{?with_doc}
 # generate html docs
 export PYTHONPATH=.
-sphinx-build-%{pyver} -b html doc/source doc/build/html
-# remove the sphinx-build-%{pyver} leftovers
+sphinx-build-3 -b html doc/source doc/build/html
+# remove the sphinx-build-3 leftovers
 rm -rf doc/build/html/.{doctrees,buildinfo}
 %endif
 
 %install
-%{pyver_install}
+%{py3_install}
 
 %check
-export PYTHON=%{pyver_bin}
-%{pyver_bin} setup.py test
+export PYTHON=%{__python3}
+%{__python3} setup.py test
 
-%files -n python%{pyver}-%{library}
+%files -n python3-%{library}
 %license LICENSE
-%{pyver_sitelib}/%{module}
-%{pyver_sitelib}/%{module}-*.egg-info
-%exclude %{pyver_sitelib}/%{module}/tests
+%{python3_sitelib}/%{module}
+%{python3_sitelib}/%{module}-*.egg-info
+%exclude %{python3_sitelib}/%{module}/tests
 
-%files -n python%{pyver}-%{library}-tests
+%files -n python3-%{library}-tests
 %license LICENSE
-%{pyver_sitelib}/%{module}/tests
+%{python3_sitelib}/%{module}/tests
 
 %if 0%{?with_doc}
 %files -n python-%{library}-doc
