@@ -32,7 +32,7 @@ BuildRequires:  openstack-macros
 Summary:    OpenStack sphinx-feature-classification library
 %{?python_provide:%python_provide python3-%{library}}
 
-BuildRequires:  git
+BuildRequires:  git-core
 BuildRequires:  openstack-macros
 BuildRequires:  python3-devel
 BuildRequires:  python3-pbr
