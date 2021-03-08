@@ -41,9 +41,9 @@ BuildRequires:  python3-ddt
 BuildRequires:  python3-testtools
 BuildRequires:  python3-testrepository
 
-Requires:  python3-pbr
+Requires:  python3-pbr >= 2.0
 
-Requires:  python3-docutils
+Requires:  python3-docutils >= 0.11
 
 %description -n python3-%{library}
 OpenStack sphinx-feature-classification library.
