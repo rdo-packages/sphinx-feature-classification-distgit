@@ -137,3 +137,4 @@ rm -rf doc/build/html/.{doctrees,buildinfo}
 %endif
 
 %changelog
+# REMOVEME: error caused by commit https://opendev.org/openstack/sphinx-feature-classification/commit/d3d6887960395daef06bf60e6a1bb767e8396447
