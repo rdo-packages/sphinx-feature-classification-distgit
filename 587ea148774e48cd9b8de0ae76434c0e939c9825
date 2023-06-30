@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e26b68e0_84462c75",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 128
+      },
+      "writtenOn": "2023-06-30T12:20:09Z",
+      "side": 1,
+      "message": "DEBUG: ValueError: Requirement \u0027-chttps://releases.openstack.org/constraints/upper/master\u0027 from tox --print-deps-only: py39,docs is invalid. Hint: It might be an URL. %pyproject_buildrequires cannot handle all URL-based requirements. Add PackageName@ (see PEP 508) to the URL to at least require any version of PackageName.\n\nWe need to sed tox.ini to remove that. It\u0027s probably different in the tagged version that in master branch",
+      "revId": "587ea148774e48cd9b8de0ae76434c0e939c9825",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
+    }
+  ]
+}
