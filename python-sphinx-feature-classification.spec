@@ -14,8 +14,8 @@
 %endif
 
 Name:       python-%{library}
-Version:    XXX
-Release:    XXX
+Version:    1.1.0
+Release:    2%{?dist}
 Summary:    OpenStack sphinx-feature-classification library
 License:    Apache-2.0
 URL:        https://docs.openstack.org/sphinx-feature-classification/latest/
@@ -137,3 +137,6 @@ rm -rf doc/build/html/.{doctrees,buildinfo}
 %endif
 
 %changelog
+* Fri Mar 15 2024 RDO <dev@lists.rdoproject.org> 1.1.0-2
+- Rebuild 1.1.0 in Caracal
+
